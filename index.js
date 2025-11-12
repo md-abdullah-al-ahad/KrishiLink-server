@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 const app = express();
@@ -63,6 +63,26 @@ async function run() {
 
       const result = await usersCollection.insertOne({ name, email, photoURL });
       res.json(result);
+    });
+
+    app.get("/crops", async (req, res) => {
+      const crops = await cropsCollection.find().toArray();
+      res.json(crops);
+    });
+
+    app.get("/crops/latest", async (req, res) => {
+      const crops = await cropsCollection
+        .find()
+        .sort({ _id: -1 })
+        .limit(6)
+        .toArray();
+      res.json(crops);
+    });
+
+    app.get("/crops/:id", async (req, res) => {
+      const id = req.params.id;
+      const crop = await cropsCollection.findOne({ _id: new ObjectId(id) });
+      res.json(crop);
     });
 
     app.listen(port, () => {
