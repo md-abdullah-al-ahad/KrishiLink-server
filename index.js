@@ -52,6 +52,19 @@ async function run() {
       }
     });
 
+    app.post("/users", async (req, res) => {
+      const { name, email, photoURL } = req.body;
+
+      const existingUser = await usersCollection.findOne({ email: email });
+
+      if (existingUser) {
+        return res.json({ message: "User already exists" });
+      }
+
+      const result = await usersCollection.insertOne({ name, email, photoURL });
+      res.json(result);
+    });
+
     app.listen(port, () => {
       console.log(`KrishiLink Server is running on port ${port}`);
     });
