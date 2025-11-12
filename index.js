@@ -85,6 +85,36 @@ async function run() {
       res.json(crop);
     });
 
+    app.post("/crops", async (req, res) => {
+      const {
+        name,
+        type,
+        pricePerUnit,
+        unit,
+        quantity,
+        description,
+        location,
+        image,
+        owner,
+      } = req.body;
+
+      const cropData = {
+        name,
+        type,
+        pricePerUnit,
+        unit,
+        quantity,
+        description,
+        location,
+        image,
+        owner,
+        interests: [],
+      };
+
+      const result = await cropsCollection.insertOne(cropData);
+      res.json(result);
+    });
+
     app.listen(port, () => {
       console.log(`KrishiLink Server is running on port ${port}`);
     });
