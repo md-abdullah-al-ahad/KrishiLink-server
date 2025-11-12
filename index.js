@@ -115,6 +115,14 @@ async function run() {
       res.json(result);
     });
 
+    app.get("/my-crops/:email", async (req, res) => {
+      const email = req.params.email;
+      const crops = await cropsCollection
+        .find({ "owner.ownerEmail": email })
+        .toArray();
+      res.json(crops);
+    });
+
     app.listen(port, () => {
       console.log(`KrishiLink Server is running on port ${port}`);
     });
